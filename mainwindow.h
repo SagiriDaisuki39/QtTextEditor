@@ -1,8 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "FileHandler.h"
+#include "shortcuts.h"
+
+#include <QMainWindow>
 
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +29,8 @@ private slots:
     void onCursorPositionChanged();
     void onTextChanged();
 
+
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -38,6 +42,7 @@ private:
     bool saveFileAs();
 
     FileHandler m_fileHandler;  // 封装文件操作
+    Shortcuts *m_shortcuts;     // 封装快捷键操作
 };
 
 #endif // MAINWINDOW_H

@@ -1,10 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "shortcuts.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QRegularExpression>
+#include <QShortcut>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,6 +17,18 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("我的记事本");
     connect(ui->textEditor,SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
     connect(ui->textEditor, &QTextEdit::textChanged, this, &MainWindow::onTextChanged);
+
+    // 初始化快捷键管理
+    m_shortcuts = new Shortcuts(this, ui->textEditor);
+
+    // 文件快捷键
+    m_shortcuts->setupFileShortcuts(ui->action_new,
+                                    ui->action_open,
+                                    ui->action_save,
+                                    ui->action_saveAs);
+
+    // 编辑器快捷键（包含 Ctrl+滚轮）
+    m_shortcuts->setupEditorShortcuts();
 }
 
 MainWindow::~MainWindow()
@@ -176,10 +191,11 @@ void MainWindow::onTextChanged()
     int charCount = text.length();
 
     // 统计单词数（以空格/换行分隔）
-    QStringList words = text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
-    int wordCount = words.size();
+    // QStringList words = text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+    // int wordCount = words.size();
 
     // 更新状态栏或者标签
-    QString msg = QString("字数: %1 | 单词数: %2").arg(charCount).arg(wordCount);
+    // QString msg = QString("字数: %1 | 单词数: %2").arg(charCount).arg(wordCount);
+    QString msg = QString(" 字数: %1").arg(charCount);
     ui->label_counting->setText(msg);
 }
